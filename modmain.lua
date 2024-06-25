@@ -68,20 +68,62 @@ local function HandlePlayerSpawn(inst, player)
 			end
 			-- Broken logic until map is updated
 		else
-			if NSI_OPTIONS == "NSI_NEW_CHARACTER" then
-				print("[NSI_NEW_CHARACTER]")
+			if NSI_OPTIONS == "NSI_OLD_CHARACTER" then
+				print("[NSI_OLD_CHARACTER]")
 				if spawn and not contains(nsi_players, player.name) then
 					ClearStartingItems(player)
 				end
 			end
 		end
 	end
-	
-    if not contains(nsi_players, player.name) then
-        table.insert(nsi_players, player.name)
-    end
+
+	print("player: ")
+	for k,v in pairs(player) do
+		print("\tkey : " .. k .. " value : " .. tostring(v))
+		if type(v) == "table" then
+			for k2,v2 in pairs(v) do
+                print("\t\tkey : " .. tostring(k2) .. " value : " .. tostring(v2))
+            end
+		end
+	end
+	print("inst :")
+	for k,v in pairs(inst) do
+		print("\tkey : " .. k .. " value : " .. tostring(v))
+		if type(v) == "table" then
+			for k2,v2 in pairs(v) do
+                print("\t\tkey : " .. tostring(k2) .. " value : " .. tostring(v2))
+            end
+		end
+	end
+
+	if not contains(nsi_players, player.name) then
+		table.insert(nsi_players, player.name)
+	end
 
 	SavePlayers()
+end
+
+-- globals.lua
+-- show all global variables
+
+local seen = {}
+
+function dump(t, i)
+	seen[t] = true
+	local s = {}
+	local n = 0
+	for k in pairs(t) do
+		n = n + 1
+		s[n] = k
+	end
+	table.sort(s)
+	for k, v in ipairs(s) do
+		print(i, v)
+		v = t[v]
+		if type(v) == "table" and not seen[v] then
+			dump(v, i .. "\t")
+		end
+	end
 end
 
 local function OnPlayerSpawn(inst, player)
