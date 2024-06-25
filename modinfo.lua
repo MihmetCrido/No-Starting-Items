@@ -17,7 +17,7 @@ dst_compatible = true
 
 configuration_options = {
     {
-        name = "NSI_OPTIONS",
+        name = "NSI_OPTION",
         default = "NSI_SWP_CHARACTER",
         options = {
 			{ description = "Any",  data = "NSI_ANY_CHARACTER", hover = "No starting items when starting the game as any character" },
