@@ -1,7 +1,7 @@
-name = "No more starting items"
+name = "No starting items"
 description = ""
 author = "Mihmetcrido"
-version = "0.01"
+version = "0.1"
 forumthread = ""
 api_version_dst = 10
 
@@ -15,77 +15,57 @@ dont_starve_compatible = false
 reign_of_giants_compatible = false
 dst_compatible = true
 
-
-configuration_options =
-{
-	{
-        name = "Pick",
-        label = "??",
-        hover = "???",
-        options = {
-            {
-                description = "A",
-                data = true;
-            },
-            {
-                description = "B",
-                data = false;
-            }
-        },
-        default = true
-	},
+configuration_options = {
     {
-        name = "Pick2",
-        label = "??2",
-        hover = "???2",
+        name = "NSI_OPTIONS",
+        default = "NSI_SWP_CHARACTER",
         options = {
-            {
-                description = "A2",
-                data = true;
-            },
-            {
-                description = "B2",
-                data = false;
-            }
+			{ description = "Any",  data = "NSI_ANY_CHARACTER", hover = "." },
+			{ description = "Swap", data = "NSI_SWP_CHARACTER", hover = ".." },
+			{ description = "New",  data = "NSI_NEW_CHARACTER", hover = "..." },
         },
-        default = true
+        label = "No Starting Item(s)",
     },
-	{
-		name = "winter",
-		label = "Starting Items",
-		options =	{
-						{description = "Winter : Nothing", data = "w_nothing", hover = "Nothing"},
-						{description = "Winter : Basic", data = "w_basic", hover = "Hot Chili"},
-						{description = "Winter : Normal", data = "w_normal", hover = "Hot Chili, Torch"},
-						{description = "Winter : Lot", data = "w_lot", hover = "Hot Chili, Torch, Earmuffs"},
-						{description = "Winter : Plenty", data = "w_plenty", hover = "Hot Chili, Torch, Earmuffs, Thermal Stone"}
-					},
-		default = "w_basic"
+	{	
+		name = "nsi_options",
+		label = "DEBUG_ nsi_options",
+		options = {
+			{ description = "Any",  data = "NSI_ANY_CHARACTER", hover = "." },
+			{ description = "Swap", data = "NSI_SWP_CHARACTER", hover = ".." },
+			{ description = "New",  data = "NSI_NEW_CHARACTER", hover = "..." }
+		},
+		default = "NSI_SWP_CHARACTER"
 	},
 	{
-		name = "spring",
-		label = "Starting Items",
-		options =	{
-						{description = "Spring : Nothing", data = "sp_nothing", hover = "Nothing"},
-						{description = "Spring : Basic", data = "sp_basic", hover = "Pretty Parasol"},
-						{description = "Spring : Normal", data = "sp_normal", hover = "Pretty Parasol, Torch"},
-						{description = "Spring : Lot", data = "sp_lot", hover = "Umbrella, Torch"},
-						{description = "Spring : Plenty", data = "sp_plenty", hover = "Umbrella, Torch, Rain Hat"}
-					},
-		default = "sp_nothing"
+		name = "Pick",
+		label = "??",
+		hover = "???",
+		options = {
+			{
+				description = "A",
+				data = true,
+			},
+			{
+				description = "B",
+				data = false,
+			}
+		},
+		default = true
 	},
 	{
-		name = "summer",
-		label = "Starting Items",
-		options =	{
-						{description = "Summer : Nothing", data = "su_nothing", hover = "Nothing"},
-						{description = "Summer : Basic", data = "su_basic", hover = "Whirly Fan"},
-						{description = "Summer : Normal", data = "su_normal", hover = "Whirly Fan, Pretty Parasol"},
-						{description = "Summer : Lot", data = "su_lot", hover = "Whirly Fan, Pretty Parasol, Straw Hat"},
-						{description = "Summer : Plenty", data = "su_plenty", hover = "Whirly Fan, Pretty Parasol, Ice Cube"}
-					},
-		default = "su_basic"
+		name = "Pick2",
+		label = "??2",
+		hover = "???2",
+		options = {
+			{
+				description = "A2",
+				data = true,
+			},
+			{
+				description = "B2",
+				data = false,
+			}
+		},
+		default = true
 	}
 }
-
-
