@@ -1,7 +1,7 @@
 name = "No starting items"
 description = ""
 author = "Mihmetcrido"
-version = "0.1"
+version = "1"
 forumthread = ""
 api_version_dst = 10
 
@@ -24,6 +24,6 @@ configuration_options = {
 			{ description = "Swap", data = "NSI_SWP_CHARACTER", hover = "No starting items when swapping at the celestial portal" },
 			{ description = "Old",  data = "NSI_OLD_CHARACTER", hover = "No starting items when picking a character you've already played" },
         },
-        label = "No Starting Item(s) on ...",
+        label = "No Starting Item(s) on",
     }
 }
