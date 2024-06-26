@@ -4,30 +4,29 @@ local NSI_OPTIONS = GetModConfigData("NSI_OPTION", true)
 local nsi_players = {}
 local fileName = "nsi_players.txt"
 
+-- Clear all starting items from a player's inventory
 local function ClearStartingItems(player)
 	local inventory = player and player.components.inventory or nil
-	local inventorySlotCount = inventory and inventory:GetNumSlots() or 0
+	if not inventory then return end
 
+	local inventorySlotCount = inventory:GetNumSlots()
 	for i = 1, inventorySlotCount do
-		local item = inventory:GetItemInSlot(i) or nil
-		inventory:RemoveItem(item, true)
-		if item ~= nil then
+		local item = inventory:GetItemInSlot(i)
+		if item then
+			inventory:RemoveItem(item, true)
 			item:Remove()
 		end
 	end
 end
 
-
+-- Check if a list contains an item (with optional table comparison)
 local function contains(list, item)
-	-- name and prefab
-	if type(item) == "table" then
-		for k, v in ipairs(list) do
+	for _, v in ipairs(list) do
+		if type(item) == "table" then
 			if v.name == item.name and v.prefab == item.prefab then
 				return true
 			end
-		end
-	else -- name only
-		for k, v in ipairs(list) do
+		else
 			if v == item then
 				return true
 			end
@@ -36,50 +35,40 @@ local function contains(list, item)
 	return false
 end
 
+-- Load the list of players from persistent storage
 local function LoadPlayers()
 	GLOBAL.TheSim:GetPersistentString(fileName, function(load_success, data)
-		if load_success == true and data ~= nil then
+		if load_success and data then
 			nsi_players = GLOBAL.json.decode(data)
 		end
 	end)
 end
 
-local function IsInitialSpawn(inst)
-	if GLOBAL.TheWorld.components.playerspawner ~= nil
-		and GLOBAL.TheWorld.components.playerspawner:IsPlayersInitialSpawn(inst) then
-		return true
-	end
-	return false
-end
-
+-- Save the list of players to persistent storage
 local function SavePlayers()
 	GLOBAL.TheSim:SetPersistentString(fileName, GLOBAL.json.encode(nsi_players))
 end
 
+-- Check if the player is spawning for the first time
+local function IsInitialSpawn(inst)
+	local playerSpawner = GLOBAL.TheWorld.components.playerspawner
+	return playerSpawner and playerSpawner:IsPlayersInitialSpawn(inst)
+end
+
+-- Handle the player spawning event based on configuration
 local function HandlePlayerSpawn(inst, player)
 	LoadPlayers()
-	local spawn = IsInitialSpawn(inst)
+	local isInitialSpawn = IsInitialSpawn(inst)
+
+	local playerData = { name = player.name, prefab = player.prefab }
+
 	if NSI_OPTIONS == "NSI_ANY_CHARACTER" then
 		ClearStartingItems(player)
-	else
-		if NSI_OPTIONS == "NSI_SWP_CHARACTER" then
-			if spawn and contains(nsi_players, player.name) then
-				ClearStartingItems(player)
-			end
-		else
-			if NSI_OPTIONS == "NSI_OLD_CHARACTER" then
-				if spawn and contains(nsi_players, player) then
-					ClearStartingItems(player)
-				end
-			end
-		end
+	elseif NSI_OPTIONS == "NSI_SWP_CHARACTER" and isInitialSpawn and contains(nsi_players, playerData.name) then
+		ClearStartingItems(player)
+	elseif NSI_OPTIONS == "NSI_OLD_CHARACTER" and isInitialSpawn and contains(nsi_players, playerData) then
+		ClearStartingItems(player)
 	end
-	
-	local playerData = {
-		name = player.name,
-		prefab = player.prefab,
-		-- Add any other player-specific data here
-	}
 
 	if not contains(nsi_players, playerData) then
 		table.insert(nsi_players, playerData)
@@ -88,6 +77,7 @@ local function HandlePlayerSpawn(inst, player)
 	SavePlayers()
 end
 
+-- Modify the player's OnNewSpawn function to handle custom spawning logic
 local function OnPlayerSpawn(inst, player)
 	player.prev_OnNewSpawn = player.OnNewSpawn
 	player.OnNewSpawn = function()
@@ -101,6 +91,7 @@ local function OnPlayerSpawn(inst, player)
 	end
 end
 
+-- Set up event listeners for player spawning events
 local function ListenForPlayers(inst)
 	if GLOBAL.TheWorld.ismastersim then
 		inst:ListenForEvent("ms_playerspawn", OnPlayerSpawn)
